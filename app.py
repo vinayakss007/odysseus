@@ -360,6 +360,12 @@ if AUTH_ENABLED:
     app.add_middleware(AuthMiddleware)
     logger.info("Auth middleware enabled (AUTH_ENABLED=true)")
 else:
+    class _NoopAuthMiddleware(BaseHTTPMiddleware):
+        async def dispatch(self, request: Request, call_next):
+            request.state.current_user = ""
+            request.state.api_token = False
+            return await call_next(request)
+    app.add_middleware(_NoopAuthMiddleware)
     logger.info("Auth middleware disabled (set AUTH_ENABLED=true to enable)")
 
 # ========= STATIC FILES =========

@@ -35,6 +35,9 @@ def _verify_session_owner(request: Request, session_id: str, session_manager=Non
     ``session_manager`` is optional and defaults to ``None`` so existing callers
     that only care about persisted sessions keep their exact prior behavior.
     """
+    from src.auth_helpers import _auth_disabled
+    if _auth_disabled():
+        return
     user = effective_user(request)
     if not user:
         raise HTTPException(403, "Authentication required")
