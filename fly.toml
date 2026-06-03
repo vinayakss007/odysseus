@@ -1,0 +1,42 @@
+app = "odysseus"
+primary_region = "iad"
+kill_signal = "SIGTERM"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[http_service]
+  internal_port = 7000
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [http_service.checks]
+    status = "pass"
+    path = "/api/health"
+    interval = "30s"
+    timeout = "10s"
+    method = "GET"
+
+[[mounts]]
+  source = "odysseus_data"
+  destination = "/app/data"
+
+[[mounts]]
+  source = "odysseus_logs"
+  destination = "/app/logs"
+
+[env]
+  AUTH_ENABLED = "true"
+  SECURE_COOKIES = "true"
+  APP_BIND = "0.0.0.0"
+  APP_PORT = "7000"
+  LOCALHOST_BYPASS = "false"
+  ODYSSEUS_DISABLE_MCP = "0"
+  DATABASE_URL = "sqlite:////app/data/app.db"
+
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1
