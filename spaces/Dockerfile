@@ -24,14 +24,15 @@ COPY . .
 RUN mkdir -p /data && ln -sfn /data /app/data && \
     mkdir -p /app/logs /app/services/cache/search
 
+COPY spaces/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 ENV DATABASE_URL=sqlite:////data/app.db
 ENV APP_BIND=0.0.0.0
 ENV APP_PORT=7860
-ENV AUTH_ENABLED=true
-ENV SECURE_COOKIES=true
+ENV AUTH_ENABLED=false
 ENV LOCALHOST_BYPASS=false
-ENV ODYSSEUS_DISABLE_MCP=0
 
 EXPOSE 7860
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
+ENTRYPOINT ["/entrypoint.sh"]
