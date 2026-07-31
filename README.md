@@ -1,3 +1,5 @@
+somehow it was not working i fixed some bugs to run with opencode
+
 # Odysseus
 
 ```
